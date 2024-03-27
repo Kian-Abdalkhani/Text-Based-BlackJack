@@ -101,207 +101,211 @@ class Wallet():
     def __str__(self):
         return f'You have ${self.cash} in total'
 
+def main():
 
-#create player wallet
-PlayerWallet = Wallet(1000)
+    #create player wallet
+    PlayerWallet = Wallet(1000)
 
-#round #
-round = 0
+    #round #
+    round = 0
 
-game_on = True
+    game_on = True
 
-while game_on:
+    while game_on:
 
-    #create player and dealors hand
-    player1 = Hand(False)
-    dealor = Hand(True)
+        #create player and dealors hand
+        player1 = Hand(False)
+        dealor = Hand(True)
 
 
-    if PlayerWallet.cash == 0:
-        print("Player is out of money! Unable to continue playing")
-        game_on = False
-        break
+        if PlayerWallet.cash == 0:
+            print("Player is out of money! Unable to continue playing")
+            game_on = False
+            break
 
-    #round increment
-    round += 1
+        #round increment
+        round += 1
 
-    #Create a round running
-    round_running = True
+        #Create a round running
+        round_running = True
 
-    #shows current Balance for Player's Wallet
-    print("===========================================================================================================================================================")
-    print(PlayerWallet)
-
-    #Ask player for wager amount
-    result = 0
-    while True:
-
-        #make sure bet amount is clear before
-        PlayerWallet.clear_bet()
-        try:
-            result = input("How much are you wagering? (To the nearest whole $) (Type Q to Quit): ") 
-
-            #checks if user wants to quit game
-            if result == 'Q' or result == 'q':
-                print('User has opted to quit game')
-                round_running = False
-                game_on = False
-                break 
-            else:
-                result = int(result)
-
-        except:
-            print("Not a #")
-            continue
-        else:
-            #Player bets more then he has
-            if result > PlayerWallet.cash:
-                print("Insufficient Funds")
-                continue
-            elif result == 0:
-                print("Cannot bet $0")
-                continue
-            elif result % 1 != 0:
-                print("$ amount not rounded to the nearest whole $")
-                continue
-            #Player Wages All-In
-            elif result == PlayerWallet.cash:
-                print("PLAYER HAS GONE ALL-IN")
-                PlayerWallet.place_bet(result)
-                print(f"A ${result} wager has been placed")
-                break
-            else:
-                PlayerWallet.place_bet(result)
-                print(f"A ${result} wager has been placed")
-                break
-
-    while round_running: 
-        
+        #shows current Balance for Player's Wallet
         print("===========================================================================================================================================================")
-        
-        #Make a new deck and shuffle
-        new_deck = Deck()
-        new_deck.shuffle()
-    
-        #Deals 2 cards to each at the beginning of game
-        for i in range(2):
-            player1.add_cards(new_deck.deal_one())
-            dealor.add_cards(new_deck.deal_one())
-        
-        #Show player his hand
-        player1.show_hand()
+        print(PlayerWallet)
 
-        #Show one card from
-        print("--------------------------------------------------------")
-        print("Dealor's Hand: ")
-        print(dealor.hand[0])
-        print("**HIDDEN CARD**")
-        print("--------------------------------------------------------")
+        #Ask player for wager amount
+        result = 0
+        while True:
 
-
-        #Checks for BlackJack out of the box
-        #Checks if both have BlackJack
-        if(dealor.check_value() == 21 and player1.check_value() == 21):
-            print("Both Player and Dealor have BlackJacks! Tie.")
-            PlayerWallet.tie()
-            round_running = False
-            break
-
-        #Checks if player has BlackJack
-        elif(player1.check_value() == 21):
-            print("Player has a BlackJack, YOU WIN!!!")
-            PlayerWallet.blackJack()
-            round_running = False
-            break
-
-        #Checks if Dealor has BlackJack
-        elif(dealor.check_value() == 21):
-            print("Dealor has BlackJack, You Lose!")
-            PlayerWallet.lose_bet()
-            round_running = False
-            break
-        
-        
-        #Store variable for user input
-        uInput = ""
-
-        #A Look to keep taking whether user will hit or stand
-        userinputting = True
-
-        while userinputting:
-
+            #make sure bet amount is clear before
+            PlayerWallet.clear_bet()
             try:
-                uInput = input("Would you like to Hit or Stand? Type H or S: ").upper()
+                result = input("How much are you wagering? (To the nearest whole $) (Type Q to Quit): ") 
 
-                #Throws Error if input isnt h or s
-                if uInput not in ['H','S']:
-                    uInput += 10
+                #checks if user wants to quit game
+                if result == 'Q' or result == 'q':
+                    print('User has opted to quit game')
+                    round_running = False
+                    game_on = False
+                    break 
+                else:
+                    result = int(result)
 
             except:
-                print("Not a valid input")
+                print("Not a #")
                 continue
-
             else:
-
-                #If Hit
-                if uInput == 'H':
-                    player1.hit(new_deck.deal_one())
-                    player1.show_hand()
-                    #checks if player busted
-                    if(player1.check_value() > 21):
-                        print("Player Busted! Dealor Wins!")
-                        PlayerWallet.lose_bet()
-                        userinputting = False
-                        round_running = False
-                        break
-
-                #If Stand
-                else:
-                    userinputting = False
+                #Player bets more then he has
+                if result > PlayerWallet.cash:
+                    print("Insufficient Funds")
+                    continue
+                elif result == 0:
+                    print("Cannot bet $0")
+                    continue
+                elif result % 1 != 0:
+                    print("$ amount not rounded to the nearest whole $")
+                    continue
+                #Player Wages All-In
+                elif result == PlayerWallet.cash:
+                    print("PLAYER HAS GONE ALL-IN")
+                    PlayerWallet.place_bet(result)
+                    print(f"A ${result} wager has been placed")
                     break
+                else:
+                    PlayerWallet.place_bet(result)
+                    print(f"A ${result} wager has been placed")
+                    break
+
+        while round_running: 
+            
+            print("===========================================================================================================================================================")
+            
+            #Make a new deck and shuffle
+            new_deck = Deck()
+            new_deck.shuffle()
         
-        dealor.show_hand()
+            #Deals 2 cards to each at the beginning of game
+            for i in range(2):
+                player1.add_cards(new_deck.deal_one())
+                dealor.add_cards(new_deck.deal_one())
+            
+            #Show player his hand
+            player1.show_hand()
 
-        if player1.check_value() > 21:
-            round_running = False
-            break
-        else:
+            #Show one card from
+            print("--------------------------------------------------------")
+            print("Dealor's Hand: ")
+            print(dealor.hand[0])
+            print("**HIDDEN CARD**")
+            print("--------------------------------------------------------")
 
-            if(dealor.check_value() == player1.check_value()):
-                print("Both Player and Dealor are Tied!")
+
+            #Checks for BlackJack out of the box
+            #Checks if both have BlackJack
+            if(dealor.check_value() == 21 and player1.check_value() == 21):
+                print("Both Player and Dealor have BlackJacks! Tie.")
                 PlayerWallet.tie()
                 round_running = False
                 break
-            elif(dealor.check_value() > player1.check_value()):
-                print("Dealor Wins!")
+
+            #Checks if player has BlackJack
+            elif(player1.check_value() == 21):
+                print("Player has a BlackJack, YOU WIN!!!")
+                PlayerWallet.blackJack()
+                round_running = False
+                break
+
+            #Checks if Dealor has BlackJack
+            elif(dealor.check_value() == 21):
+                print("Dealor has BlackJack, You Lose!")
                 PlayerWallet.lose_bet()
                 round_running = False
                 break
+            
+            
+            #Store variable for user input
+            uInput = ""
+
+            #A Look to keep taking whether user will hit or stand
+            userinputting = True
+
+            while userinputting:
+
+                try:
+                    uInput = input("Would you like to Hit or Stand? Type H or S: ").upper()
+
+                    #Throws Error if input isnt h or s
+                    if uInput not in ['H','S']:
+                        uInput += 10
+
+                except:
+                    print("Not a valid input")
+                    continue
+
+                else:
+
+                    #If Hit
+                    if uInput == 'H':
+                        player1.hit(new_deck.deal_one())
+                        player1.show_hand()
+                        #checks if player busted
+                        if(player1.check_value() > 21):
+                            print("Player Busted! Dealor Wins!")
+                            PlayerWallet.lose_bet()
+                            userinputting = False
+                            round_running = False
+                            break
+
+                    #If Stand
+                    else:
+                        userinputting = False
+                        break
+            
+            dealor.show_hand()
+
+            if player1.check_value() > 21:
+                round_running = False
+                break
             else:
-                while dealor.check_value() < player1.check_value():
-                    #dealor adds card
-                    print("Dealor Hits!")
-                    dealor.add_cards(new_deck.deal_one())
 
-                    #show Dealors hand
-                    dealor.show_hand()
+                if(dealor.check_value() == player1.check_value()):
+                    print("Both Player and Dealor are Tied!")
+                    PlayerWallet.tie()
+                    round_running = False
+                    break
+                elif(dealor.check_value() > player1.check_value()):
+                    print("Dealor Wins!")
+                    PlayerWallet.lose_bet()
+                    round_running = False
+                    break
+                else:
+                    while dealor.check_value() < player1.check_value():
+                        #dealor adds card
+                        print("Dealor Hits!")
+                        dealor.add_cards(new_deck.deal_one())
 
-                    #checks if both have same value
-                    if(dealor.check_value() == player1.check_value()):
-                        print("Both Player and Dealor are Tied!")
-                        PlayerWallet.tie()
-                        round_running = False
-                        break
-                    
-                    #checks if dealor busts
-                    elif dealor.check_value() > 21:
-                        print("Dealor Busted! Player Wins!")
-                        PlayerWallet.win_bet()
-                        round_running = False
-                        break
+                        #show Dealors hand
+                        dealor.show_hand()
 
-                    elif dealor.check_value() > player1.check_value():
-                        print("Dealor Wins!")
-                        PlayerWallet.lose_bet()
-                        round_running = False
-                        break
+                        #checks if both have same value
+                        if(dealor.check_value() == player1.check_value()):
+                            print("Both Player and Dealor are Tied!")
+                            PlayerWallet.tie()
+                            round_running = False
+                            break
+                        
+                        #checks if dealor busts
+                        elif dealor.check_value() > 21:
+                            print("Dealor Busted! Player Wins!")
+                            PlayerWallet.win_bet()
+                            round_running = False
+                            break
+
+                        elif dealor.check_value() > player1.check_value():
+                            print("Dealor Wins!")
+                            PlayerWallet.lose_bet()
+                            round_running = False
+                            break
+
+if __name__ == '__main__':
+    main()
