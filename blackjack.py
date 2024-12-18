@@ -236,7 +236,8 @@ def main():
 
                     #Throws Error if input isnt h or s
                     if uInput not in ['H','S']:
-                        uInput += 10
+                        print("Not a valid input")
+                        continue
 
                 except:
                     print("Not a valid input")
